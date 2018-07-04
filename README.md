@@ -1,7 +1,7 @@
 # PyQt_UI
 A user interface based on PyQt
 
-Dependences: Pyqt
+Dependences: Pyqt4
 
 Example:
 
