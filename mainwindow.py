@@ -19,28 +19,30 @@ class MyWindow(QtGui.QMainWindow):
         # QtGui.QToolTip.setFont(QtGui.QFont('SansSerif', 10, QtGui.QFont.Black))
         # QtGui.QToolTip.setPalette(QtGui.QPalette.)
 
-        windows = QtGui.QWidget(self)  # MainWindows
+        windows = QtGui.QWidget(self)  # MainWindows    CentralWidget
         self.setCentralWidget(windows)
 
-        hbox = QtGui.QHBoxLayout()
-        image_box = QtGui.QVBoxLayout()
+        hbox = QtGui.QHBoxLayout()   # MainWindows layout: Left. Menu    Right. image
+        image_box = QtGui.QVBoxLayout()   # Right Part Layout
 
-        self.button_menu = QtGui.QVBoxLayout()
-        # self.button_menu.setFrameStyle(QtGui.QFrame.NoFrame)
-        # self.button_menu.setToolTip('This are <b>button</b> widgets')
+        self.button_menu = QtGui.QVBoxLayout()  # Menu Button
         self.create_btn_menu()
 
-        self.image_show_ = QtGui.QLabel()
+        self.image_show_ = QtGui.QLabel()   # Displayed Image
         self.image_show_.setFrameStyle(QtGui.QFrame.StyledPanel)
+        self.image_show_.setAlignment(QtCore.Qt.AlignCenter)
 
-        select_image_frame = QtGui.QFrame()
+        select_image_frame = QtGui.QFrame()   # Select image, can add new image by 'Open Selection' button
         select_image_frame.setFrameStyle(QtGui.QFrame.WinPanel)
         self.select_image_layout = QtGui.QHBoxLayout()
+        self.select_image_layout.setAlignment(QtCore.Qt.AlignLeft)
         select_image_frame.setLayout(self.select_image_layout)
-        self.select_image_list = []
-        # self.show_select_image()
+        self.select_image_list = []   # A image list
 
-        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        self.select_btn_gruop = QtGui.QButtonGroup()   # Group all selection button
+        self.select_btn_gruop.exclusive()
+
+        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)   # Splitter
         splitter.addWidget(self.image_show_)
         splitter.addWidget(select_image_frame)
         splitter.setStretchFactor(0, 10)
@@ -53,7 +55,7 @@ class MyWindow(QtGui.QMainWindow):
         hbox.setStretchFactor(image_box, 10)
         windows.setLayout(hbox)
 
-        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('platinum'))
 
         self.resize(1000, 1000)
         # self.showFullScreen()
@@ -75,6 +77,7 @@ class MyWindow(QtGui.QMainWindow):
         QtCore.QObject.connect(open_btn, QtCore.SIGNAL('clicked()'), self.fileopen)
 
         sel_file_open = QtGui.QPushButton('Open Selection', self)
+        sel_file_open.setToolTip("Open File and set as selectable button")
         QtCore.QObject.connect(sel_file_open, QtCore.SIGNAL('clicked()'), self.select_file_open)
 
         self.button_menu.addWidget(open_btn)
@@ -89,7 +92,7 @@ class MyWindow(QtGui.QMainWindow):
         with f:
             img = QtGui.QPixmap(f.name)
             # scale
-            self.image_show_.setPixmap(img)
+            # self.image_show_.setPixmap(img.resized(700, 700))
 
     def select_file_open(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '/home/wooqy',
@@ -108,7 +111,17 @@ class MyWindow(QtGui.QMainWindow):
             new_btn.setIcon(QtGui.QIcon(img))
             new_btn.setFixedSize(100, 100)
             new_btn.setIconSize(QtCore.QSize(100, 100))
+            new_btn.setCheckable(True)
+            new_btn.setStyleSheet("QPushButton::pressed{ border-style: inset}")
             self.select_image_layout.addWidget(new_btn)
+            self.select_btn_gruop.addButton(new_btn)
+            new_btn.clicked[bool].connect(self.func_select)
+
+    def func_select(self, pressed):
+        source = self.sender()
+        if pressed:
+            img = source.icon().pixmap(700, 700)
+            self.image_show_.setPixmap(img)
 
 
 def main():
