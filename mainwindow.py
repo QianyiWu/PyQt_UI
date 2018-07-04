@@ -92,7 +92,7 @@ class MyWindow(QtGui.QMainWindow):
         with f:
             img = QtGui.QPixmap(f.name)
             # scale
-            # self.image_show_.setPixmap(img.resized(700, 700))
+            self.image_show_.setPixmap(img)
 
     def select_file_open(self):
         fname = QtGui.QFileDialog.getOpenFileName(self, 'Open File', '/home/wooqy',
