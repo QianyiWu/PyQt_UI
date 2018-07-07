@@ -57,8 +57,8 @@ class MyWindow(QtGui.QMainWindow):
 
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('platinum'))
 
-        self.resize(1000, 1000)
-        # self.showFullScreen()
+        # self.resize(1000, 1000)
+        self.showMaximized()
         # self.center()
         self.setWindowTitle("User Interface")
 
@@ -112,7 +112,7 @@ class MyWindow(QtGui.QMainWindow):
             new_btn.setFixedSize(100, 100)
             new_btn.setIconSize(QtCore.QSize(100, 100))
             new_btn.setCheckable(True)
-            new_btn.setStyleSheet("QPushButton::pressed{ border-style: inset}")
+            # new_btn.setStyleSheet("QPushButton::pressed{ border-style: inset}")
             self.select_image_layout.addWidget(new_btn)
             self.select_btn_gruop.addButton(new_btn)
             new_btn.clicked[bool].connect(self.func_select)
